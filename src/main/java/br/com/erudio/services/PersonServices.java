@@ -35,7 +35,10 @@ public class PersonServices {
 
     public List<PersonDTO> findAll() {
 
-        return parseListObjects(repository.findAll(), PersonDTO.class) ;
+        var persons = parseListObjects(repository.findAll(), PersonDTO.class);
+
+        persons.forEach(this::addHteosLinks);
+        return persons;
     }
 
     public PersonDTO findById(Long id) {
@@ -56,7 +59,10 @@ public class PersonServices {
 
         var entity = parseObject(person, Person.class);
 
-        return parseObject(repository.save(entity), PersonDTO.class);
+        var dto = parseObject(repository.save(entity), PersonDTO.class);
+        addHteosLinks(dto);
+
+        return dto;
     }
 
     public PersonDTO update(PersonDTO person) {
@@ -70,7 +76,10 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return parseObject(repository.save(entity), PersonDTO.class);
+        var dto = parseObject(repository.save(entity), PersonDTO.class);
+        addHteosLinks(dto);
+
+        return dto;
     }
 
     public void delete(Long id) {
@@ -83,7 +92,7 @@ public class PersonServices {
     }
 
     // HATEOS -> Link para requisição
-    private static void addHteosLinks(PersonDTO dto) {
+    private void addHteosLinks(PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class).findAll()).withRel("findAll").withType("GET"));
