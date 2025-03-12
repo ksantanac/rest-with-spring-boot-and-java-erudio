@@ -47,7 +47,7 @@ public class PersonServices {
         var dto = parseObject(entity, PersonDTO.class);
 
         // HATEOS -> Link para requisição
-        addHteosLinks(id, dto);
+        addHteosLinks(dto);
         return dto;
     }
 
