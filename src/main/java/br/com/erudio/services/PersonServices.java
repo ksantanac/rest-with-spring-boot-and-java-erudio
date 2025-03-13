@@ -3,6 +3,7 @@ package br.com.erudio.services;
 import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.data.dto.v2.PersonDTOV2;
+import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.exception.ResourceNotFoundException;
 import static br.com.erudio.mapper.ObjectMapper.parseListObjects;
 import static br.com.erudio.mapper.ObjectMapper.parseObject;
@@ -18,13 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @Service
 public class PersonServices {
 
-    private final AtomicLong counter = new AtomicLong();
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
     @Autowired
@@ -55,6 +54,9 @@ public class PersonServices {
     }
 
     public PersonDTO create(PersonDTO person) {
+        
+        if (person == null) throw new RequiredObjectIsNullException();
+
         logger.info("Creating one Person!");
 
         var entity = parseObject(person, Person.class);
@@ -66,6 +68,9 @@ public class PersonServices {
     }
 
     public PersonDTO update(PersonDTO person) {
+
+        if (person == null) throw new RequiredObjectIsNullException();
+
         logger.info("Updating one Person!");
 
         Person entity = repository.findById(person.getId())
