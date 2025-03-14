@@ -18,7 +18,7 @@ public class Book {
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Temporal(TemporalType.TIMESTAMP) // Define que a data será armazenada como TIMESTAMP
+    @Temporal(TemporalType.DATE) // Define que a data será armazenada como TIMESTAMP
     @Column(name = "launch_date", nullable = false)
     private Date launch_date;
 
