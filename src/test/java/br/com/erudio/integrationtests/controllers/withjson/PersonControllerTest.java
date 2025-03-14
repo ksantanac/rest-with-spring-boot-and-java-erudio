@@ -20,9 +20,9 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class) // JUnit roda os teste aleatoriamente, caso dependa do teste anterior nao dará certo. Com isso, usa o order
+// JUnit roda os teste aleatoriamente, caso dependa do teste anterior nao dará certo. Com isso, usa o order
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PersonControllerTest extends AbstractIntegrationTest {
-
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
