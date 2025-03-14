@@ -1,11 +1,11 @@
-package br.com.erudio.unitetests.mapper;
+package br.com.erudio.unittests.mapper;
 import static br.com.erudio.mapper.ObjectMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
 import br.com.erudio.data.dto.v1.PersonDTO;
-import br.com.erudio.unitetests.mapper.mocks.MockPerson;
+import br.com.erudio.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

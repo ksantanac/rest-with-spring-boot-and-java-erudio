@@ -3,7 +3,7 @@ package br.com.erudio.controllers;
 
 import br.com.erudio.controllers.docs.BookControllerDocs;
 import br.com.erudio.data.dto.v1.BookDTO;
-import br.com.erudio.services.BookServices;
+import br.com.erudio.unittests.services.BookServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
