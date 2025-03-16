@@ -17,8 +17,7 @@ import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 // JUnit roda os teste aleatoriamente, caso dependa do teste anterior nao dará certo. Com isso, usa o order
@@ -58,6 +57,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .post()
             .then()
                 .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
             .extract()
                 .body()
                     .asString();
@@ -88,6 +88,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .put()
             .then()
                 .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
             .extract()
                 .body()
                     .asString();
@@ -117,6 +118,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .get("{id}")
                 .then()
                 .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
                 .body()
                 .asString();
@@ -133,6 +135,48 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertEquals("Male", createdPerson.getGender());
         assertTrue(createdPerson.getEnabled());
 
+    }
+
+    @Test
+    @Order(4)
+    void disableTest() throws JsonProcessingException {
+
+        var content = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .pathParam("id", person.getId())
+                .when()
+                .patch("{id}")
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .body()
+                .asString();
+
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        person = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("Linus", createdPerson.getFirstName());
+        assertEquals("Benedict Torvalds", createdPerson.getLastName());
+        assertEquals("Helsinki - Finland", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertFalse(createdPerson.getEnabled());
+
+    }
+
+    @Test
+    @Order(5)
+    void deleteTest() throws JsonProcessingException {
+
+        given(specification)
+                .pathParam("id", person.getId())
+            .when()
+                .delete("{id}")
+            .then()
+                .statusCode(204);
     }
 
     private void mockPerson() {
