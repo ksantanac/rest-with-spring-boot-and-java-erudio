@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    @Modifying
+    @Modifying(clearAutomatically = true) // para não pegar do CACHE e sim do banco
     @Query("UPDATE Person p SET p.enabled = false WHERE p.id =:id")
-    public void disablePerson(@Param("id") Long id);
+    void disablePerson(@Param("id") Long id);
 }

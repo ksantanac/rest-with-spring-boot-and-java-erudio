@@ -125,7 +125,7 @@ public class PersonServices {
 
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
 
-        dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto)).withRel("disable").withType("PATCH"));
+        dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getId())).withRel("disable").withType("PATCH"));
 
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
     }
