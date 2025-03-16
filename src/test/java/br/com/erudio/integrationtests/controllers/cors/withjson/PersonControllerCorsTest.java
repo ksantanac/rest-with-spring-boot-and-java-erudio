@@ -1,4 +1,4 @@
-package br.com.erudio.integrationtests.controllers.withjson;
+package br.com.erudio.integrationtests.controllers.cors.withjson;
 
 import br.com.erudio.config.TestConfigs;
 import br.com.erudio.integrationtests.dto.PersonDTO;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 // JUnit roda os teste aleatoriamente, caso dependa do teste anterior nao dará certo. Com isso, usa o order
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerTest extends AbstractIntegrationTest {
+class PersonControllerCorsTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
@@ -76,6 +76,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals("Stallman", createdPerson.getLastName());
         assertEquals("New York City - New York - EUA", createdPerson.getAddress());
         assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
 
     }
 
@@ -145,6 +146,7 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals("Stallman", createdPerson.getLastName());
         assertEquals("New York City - New York - EUA", createdPerson.getAddress());
         assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
 
     }
 
@@ -179,5 +181,6 @@ class PersonControllerTest extends AbstractIntegrationTest {
         person.setLastName("Stallman");
         person.setAddress("New York City - New York - EUA");
         person.setGender("Male");
+        person.setEnabled(true);
     }
 }
