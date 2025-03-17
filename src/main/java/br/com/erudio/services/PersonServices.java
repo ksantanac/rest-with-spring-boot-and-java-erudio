@@ -129,8 +129,8 @@ public class PersonServices {
     private void addHteosLinks(PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
 
-        dto.add(linkTo(methodOn(PersonController.class).findAll(1, 12
-        )).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findAll(1, 12,"asc"))
+                .withRel("findAll").withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
 
