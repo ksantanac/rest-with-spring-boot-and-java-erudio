@@ -7,8 +7,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/rest_with_spring_boot_erudio?useTimezone=true&serverTimezone=UTC
     username: root
-    password: 123456789
-#    password: rekaue13
+#    password: 123456789
+    password: rekaue13
   jpa:
     hibernate:
       ddl-auto: none
