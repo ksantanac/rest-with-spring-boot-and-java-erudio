@@ -1,7 +1,9 @@
 package br.com.erudio.services;
 
 import br.com.erudio.controllers.BookController;
+import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.dto.v1.BookDTO;
+import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.exception.ResourceNotFoundException;
 import br.com.erudio.mapper.custom.BookMapper;
@@ -13,6 +15,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +33,9 @@ public class BookServices {
 
     @Autowired
     BookRepository repository;
+
+    @Autowired
+    PagedResourcesAssembler<BookDTO> assembler;
 
     @Autowired
     BookMapper converter;
@@ -41,11 +52,34 @@ public class BookServices {
         return dto;
     }
 
-    public List<BookDTO> findAll() {
-        var books = parseListObjects(repository.findAll(), BookDTO.class);
+//    public List<BookDTO> findAll() {
+//        logger.info("Finding all books!");
+//
+//        var books = parseListObjects(repository.findAll(), BookDTO.class);
+//
+//        books.forEach(this::addHteosLinks);
+//        return books;
+//    }
 
-        books.forEach(this::addHteosLinks);
-        return books;
+    public PagedModel<EntityModel<BookDTO>> findAll(Pageable pageable) {
+
+        logger.info("Finding all people!");
+
+        var books = repository.findAll(pageable);
+
+        var booksWithLinks = books.map(person -> {
+            var dto = parseObject(person, BookDTO.class);
+            addHteosLinks(dto);
+
+            return dto;
+        });
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo(
+            WebMvcLinkBuilder.methodOn(BookController.class)
+                .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort())))
+                    .withSelfRel();
+
+        return assembler.toModel(booksWithLinks, findAllLink);
     }
 
     public BookDTO create(BookDTO book) {
@@ -92,7 +126,8 @@ public class BookServices {
     private void addHteosLinks(BookDTO dto) {
         dto.add(linkTo(methodOn(BookController.class).findById(dto.getId())).withSelfRel().withType("GET"));
 
-        dto.add(linkTo(methodOn(BookController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(BookController.class).findAll(1, 12, "asc"))
+                .withRel("findAll").withType("GET"));
 
         dto.add(linkTo(methodOn(BookController.class).create(dto)).withRel("create").withType("POST"));
 
