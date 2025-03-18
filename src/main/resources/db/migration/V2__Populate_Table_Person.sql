@@ -8,3 +8,4 @@ INSERT INTO `person` (`id`, `address`, `first_name`, `gender`, `last_name`) VALU
 	(9, 'Alphaville - SP - Brasil', 'Fabio', 'Male', 'Ippolito'),
 	(10, 'Alphaville - SP - Brasil', 'Fabio', 'Male', 'Ippolito'),
 	(11, 'Barueri - SP - Brasil', 'Lorenzo', 'Male', 'Ippolito');
+	(12, 'Barueri - SP - Brasil', 'Lorenzo', 'Male', 'Ippolito');

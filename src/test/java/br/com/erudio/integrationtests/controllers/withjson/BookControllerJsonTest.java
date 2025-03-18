@@ -186,7 +186,7 @@ class BookControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(foundBookFive.getPrice());
         assertTrue(foundBookFive.getId() > 0);
         assertEquals("Head First Design Patterns", foundBookFive.getTitle());
-        assertEquals("Eric Freeman, Elisabeth Freeman, Kathy Sierra, Bert BatesX V", foundBookFive.getAuthor());
+        assertEquals("Eric Freeman, Elisabeth Freeman, Kathy Sierra, Bert Bates", foundBookFive.getAuthor());
         assertEquals(110.0, foundBookFive.getPrice());
     }
 
