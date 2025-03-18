@@ -48,7 +48,7 @@ public class MockBook {
         BookDTO book = new BookDTO();
         book.setId(number.longValue());
         book.setAuthor("Some Author" + number);
-        book.setLaunch_date(new Date());
+        book.setLaunchDate(new Date());
         book.setPrice(25D);
         book.setTitle("Some Title" + number);
         return book;

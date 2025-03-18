@@ -1,15 +1,13 @@
 package br.com.erudio.services;
 
 import br.com.erudio.controllers.BookController;
-import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.dto.v1.BookDTO;
-import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.exception.ResourceNotFoundException;
 import br.com.erudio.mapper.custom.BookMapper;
 import br.com.erudio.model.Book;
 import br.com.erudio.repository.BookRepository;
-import static br.com.erudio.mapper.ObjectMapper.parseListObjects;
+
 import static br.com.erudio.mapper.ObjectMapper.parseObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -23,7 +21,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -101,7 +98,7 @@ public class BookServices {
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 
         entity.setAuthor(book.getAuthor());
-        entity.setLaunch_date(book.getLaunch_date());
+        entity.setLaunch_date(book.getLaunchDate());
         entity.setPrice(book.getPrice());
         entity.setTitle(book.getTitle());
 

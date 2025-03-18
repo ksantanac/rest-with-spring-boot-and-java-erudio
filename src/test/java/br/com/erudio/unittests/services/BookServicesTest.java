@@ -91,7 +91,7 @@ class BookServicesTest {
         assertEquals("Some Author1", result.getAuthor());
         assertEquals(25D, result.getPrice());
         assertEquals("Some Title1", result.getTitle());
-        assertNotNull(result.getLaunch_date());
+        assertNotNull(result.getLaunchDate());
     }
 
     @Test
@@ -147,7 +147,7 @@ class BookServicesTest {
         assertEquals("Some Author1", result.getAuthor());
         assertEquals(25D, result.getPrice());
         assertEquals("Some Title1", result.getTitle());
-        assertNotNull(result.getLaunch_date());
+        assertNotNull(result.getLaunchDate());
     }
 
     @Test
@@ -217,7 +217,7 @@ class BookServicesTest {
         assertEquals("Some Author1", result.getAuthor());
         assertEquals(25D, result.getPrice());
         assertEquals("Some Title1", result.getTitle());
-        assertNotNull(result.getLaunch_date());
+        assertNotNull(result.getLaunchDate());
     }
 
     @Test
@@ -298,7 +298,7 @@ class BookServicesTest {
         assertEquals("Some Author1", bookOne.getAuthor());
         assertEquals(25D, bookOne.getPrice());
         assertEquals("Some Title1", bookOne.getTitle());
-        assertNotNull(bookOne.getLaunch_date());
+        assertNotNull(bookOne.getLaunchDate());
 
         var bookFour = books.get(4);
 
@@ -343,7 +343,7 @@ class BookServicesTest {
         assertEquals("Some Author4", bookFour.getAuthor());
         assertEquals(25D, bookFour.getPrice());
         assertEquals("Some Title4", bookFour.getTitle());
-        assertNotNull(bookFour.getLaunch_date());
+        assertNotNull(bookFour.getLaunchDate());
 
         var bookSeven = books.get(7);
 
@@ -388,6 +388,6 @@ class BookServicesTest {
         assertEquals("Some Author7", bookSeven.getAuthor());
         assertEquals(25D, bookSeven.getPrice());
         assertEquals("Some Title7", bookSeven.getTitle());
-        assertNotNull(bookFour.getLaunch_date());
+        assertNotNull(bookFour.getLaunchDate());
     }
 }
