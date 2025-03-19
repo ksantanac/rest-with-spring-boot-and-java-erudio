@@ -3,8 +3,8 @@ server:
 cors:
   originPatterns: http://localhost:8080, http://localhost:3000, https://www.erudio.com.br
 file:
-  upload-dir: /home/local/BVS/kaue.alexandre/Documentos/Cursos
-#  upload-dir: /Users/kaues/Documents/Cursos/UploadDir
+#  upload-dir: /home/local/BVS/kaue.alexandre/Documentos/Cursos
+  upload-dir: /Users/kaues/Documents/Cursos/UploadDir
 spring:
   application:
     name: rest-with-spring-boot-and-java-erudio
