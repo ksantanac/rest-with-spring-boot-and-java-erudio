@@ -7,10 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import java.util.List;
 
@@ -23,9 +25,18 @@ public class FileController implements FileControllerDocs {
     @Autowired
     private FileStorageService service;
 
+    @PostMapping("/uploadFile")
     @Override
-    public UploadFileResponseDTO uploadFile(MultipartFile file) {
-        return null;
+    public UploadFileResponseDTO uploadFile(@RequestParam("file") MultipartFile file) {
+        var fileName = service.storeFile(file);
+
+        // http://localhost:8080/api/file/v1/downloadFile/filename.docx
+        var fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/file/v1/downloadFile/")
+                .path(fileName)
+                .toUriString();
+
+        return new UploadFileResponseDTO(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
 
     @Override

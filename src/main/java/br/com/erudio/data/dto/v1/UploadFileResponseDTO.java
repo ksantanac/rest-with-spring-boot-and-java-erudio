@@ -10,11 +10,11 @@ public class UploadFileResponseDTO implements Serializable {
     private String fileName;
     private String fileDownloadUri;
     private String fileType;
-    private String size;
+    private long size;
 
     public UploadFileResponseDTO() {}
 
-    public UploadFileResponseDTO(String fileName, String fileDownloadUri, String fileType, String size) {
+    public UploadFileResponseDTO(String fileName, String fileDownloadUri, String fileType, long size) {
         this.fileName = fileName;
         this.fileDownloadUri = fileDownloadUri;
         this.fileType = fileType;
@@ -45,11 +45,11 @@ public class UploadFileResponseDTO implements Serializable {
         this.fileType = fileType;
     }
 
-    public String getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(String size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
@@ -57,7 +57,7 @@ public class UploadFileResponseDTO implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         UploadFileResponseDTO that = (UploadFileResponseDTO) o;
-        return Objects.equals(fileName, that.fileName) && Objects.equals(fileDownloadUri, that.fileDownloadUri) && Objects.equals(fileType, that.fileType) && Objects.equals(size, that.size);
+        return size == that.size && Objects.equals(fileName, that.fileName) && Objects.equals(fileDownloadUri, that.fileDownloadUri) && Objects.equals(fileType, that.fileType);
     }
 
     @Override

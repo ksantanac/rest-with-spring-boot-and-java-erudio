@@ -1,7 +1,6 @@
 package br.com.erudio.services;
 
 import br.com.erudio.config.FileStorageConfig;
-import br.com.erudio.controllers.FileController;
 import br.com.erudio.exception.FileStorageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,7 +31,7 @@ public class FileStorageService {
 
         try {
             logger.info("Creating Directories.");
-            Files.createDirectory(this.fileStorageLocation);
+            Files.createDirectories(this.fileStorageLocation);
         } catch (Exception e) {
             logger.error("Could not create the directory where files will be stored!");
             throw new FileStorageException("Could not create the directory where files will be stored!", e);
