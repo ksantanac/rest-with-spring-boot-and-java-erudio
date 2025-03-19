@@ -103,11 +103,7 @@ public class PersonController implements PersonControllerDocs {
 
     // MASSIVE PEOPLE CREATION
     @PostMapping(
-        consumes = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE,
-            MediaType.APPLICATION_YAML_VALUE
-        },
+        value = "/massCreation",
         produces = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -115,7 +111,7 @@ public class PersonController implements PersonControllerDocs {
         }
     )
     @Override
-    public List<PersonDTO> massCreation(MultipartFile file) {
+    public List<PersonDTO> massCreation(@RequestParam("file") MultipartFile file) {
         return service.massCreation(file);
     }
 

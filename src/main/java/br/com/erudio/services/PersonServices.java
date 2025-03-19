@@ -100,7 +100,7 @@ public class PersonServices {
     }
 
 
-    public List<PersonDTO> massCreation(MultipartFile file) throws Exception {
+    public List<PersonDTO> massCreation(MultipartFile file) {
 
         logger.info("Importing People from file!");
 
