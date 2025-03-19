@@ -13,7 +13,7 @@ public interface FileControllerDocs {
 
     UploadFileResponseDTO uploadFile(MultipartFile file);
 
-    List<UploadFileResponseDTO> uploadMultipleFile(MultipartFile[] files);
+    List<UploadFileResponseDTO> uploadMultipleFiles(MultipartFile[] files);
 
     ResponseEntity<ResponseEntity> downloadFile(String fileName, HttpServletRequest request);
 
