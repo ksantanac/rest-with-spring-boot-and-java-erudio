@@ -20,6 +20,7 @@
 		<testcontainers.version>1.20.4</testcontainers.version>
 		<apache.poi.version>5.3.0</apache.poi.version>
 		<commons-csv.version>1.12.0</commons-csv.version>
+		<commons-io.version>2.18.0</commons-io.version>
 	</properties>
 	<dependencies>
 
@@ -113,6 +114,12 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>${apache.poi.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
 		</dependency>
 
 	</dependencies>

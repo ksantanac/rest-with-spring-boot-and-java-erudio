@@ -126,7 +126,7 @@ public class PersonServices {
                 .toList();
 
         } catch (Exception e) {
-            throw new FileStorageException("Error processing the file!");
+            throw new FileStorageException("Error processing the file!", e);
         }
     }
 
@@ -204,6 +204,8 @@ public class PersonServices {
                 .withRel("findPeopleByName").withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
+
+        dto.add(linkTo(methodOn(PersonController.class)).slash("massCreation").withRel("massCreation").withType("POST"));
 
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
 
