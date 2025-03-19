@@ -48,20 +48,7 @@ public class PersonServices {
         logger.info("Finding all people!");
 
         var people = repository.findAll(pageable);
-
-        var peopleWithLinks = people.map(person -> {
-            var dto = parseObject(person, PersonDTO.class);
-            addHteosLinks(dto);
-
-            return dto;
-        });
-
-        Link findAllLink = WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(PersonController.class)
-                    .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort())))
-                        .withSelfRel();
-
-        return assembler.toModel(peopleWithLinks, findAllLink);
+        return buildPagedModel(pageable, people);
     }
 
     public PagedModel<EntityModel<PersonDTO>> findPeopleByName(String firstName, Pageable pageable) {
@@ -69,20 +56,7 @@ public class PersonServices {
         logger.info("Finding people by name!");
 
         var people = repository.findPeopleByName(firstName, pageable);
-
-        var peopleWithLinks = people.map(person -> {
-            var dto = parseObject(person, PersonDTO.class);
-            addHteosLinks(dto);
-
-            return dto;
-        });
-
-        Link findAllLink = WebMvcLinkBuilder.linkTo(
-                        WebMvcLinkBuilder.methodOn(PersonController.class)
-                                .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort())))
-                .withSelfRel();
-
-        return assembler.toModel(peopleWithLinks, findAllLink);
+        return buildPagedModel(pageable, people);
     }
 
     public PersonDTO findById(Long id) {
@@ -159,12 +133,31 @@ public class PersonServices {
         repository.delete(entity);
     }
 
+    private PagedModel<EntityModel<PersonDTO>> buildPagedModel(Pageable pageable, Page<Person> people) {
+        var peopleWithLinks = people.map(person -> {
+            var dto = parseObject(person, PersonDTO.class);
+            addHteosLinks(dto);
+
+            return dto;
+        });
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(PersonController.class)
+                                .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort())))
+                .withSelfRel();
+
+        return assembler.toModel(peopleWithLinks, findAllLink);
+    }
+
     // HATEOS -> Link para requisição
     private void addHteosLinks(PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class).findAll(1, 12,"asc"))
                 .withRel("findAll").withType("GET"));
+
+        dto.add(linkTo(methodOn(PersonController.class).findPeopleByName("", 1, 12,"asc"))
+                .withRel("findPeopleByName").withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
 
