@@ -659,7 +659,7 @@ insert into person (first_name, last_name, enabled, gender, address) values
 		('Ailis', 'Linnock', b'1', 'Female', '942 Mcguire Plaza'),
 		('Barbara-anne', 'Matisoff', b'1', 'Female', '1538 Karstens Circle'),
 		('Adams', 'Carlino', b'0', 'Male', '204 Mallard Hill'),
-		('Florie', 'Probert', b'0', 'Female', '32084 Scoville Way'),
+		('Lorenzo', 'Ippolito', b'1', 'Male', 'Barueri - SP - Brasil'),
 		('Theodora', 'Tart', b'0', 'Female', '43343 Gerald Crossing'),
 		('Duke', 'Pendergrast', b'0', 'Male', '2311 Roxbury Parkway'),
 		('Kelsy', 'Dassindale', b'1', 'Female', '2426 Leroy Hill'),
