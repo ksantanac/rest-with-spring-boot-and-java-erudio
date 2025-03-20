@@ -80,21 +80,24 @@ public class PersonController implements PersonControllerDocs {
             @RequestParam(value = "direction", defaultValue = "asc") String direction,
             HttpServletRequest request
     ) {
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC: Direction.ASC;
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
 
         String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
 
         Resource file = service.exportPage(pageable, acceptHeader);
 
+
         var contentType = acceptHeader != null ? acceptHeader : "application/octet-stream";
         var fileExtension = MediaTypes.APPLICATION_XLSX_VALUE.equalsIgnoreCase(acceptHeader) ? ".xlsx" : ".csv";
         var filename = "people_exported" + fileExtension;
 
         return ResponseEntity.ok()
-            .contentType(MediaType.parseMediaType(contentType))
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-            .body(file);
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + filename + "\"")
+                .body(file);
     }
 
     // FIND PEOPLE BY FIRST NAME
