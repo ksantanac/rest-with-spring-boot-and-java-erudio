@@ -230,8 +230,8 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertTrue(personOne.getId() > 0);
 
         assertEquals("Allin", personOne.getFirstName());
-        assertEquals("Otridge", personOne.getLastName());
-        assertEquals("09846 Independence Center", personOne.getAddress());
+        assertEquals("Emmot", personOne.getLastName());
+        assertEquals("7913 Lindbergh Way", personOne.getAddress());
         assertEquals("Male", personOne.getGender());
         assertFalse(personOne.getEnabled());
 

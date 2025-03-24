@@ -1,7 +1,7 @@
 package br.com.erudio.file.exporter.impl;
 
 import br.com.erudio.data.dto.v1.PersonDTO;
-import br.com.erudio.file.exporter.contract.FileExporter;
+import br.com.erudio.file.exporter.contract.PersonExporter;
 import br.com.erudio.services.QRCodeService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class PdfExporter implements FileExporter {
+public class PdfExporter implements PersonExporter {
 
     @Autowired
     private QRCodeService service;
 
     @Override
-    public Resource exportFile(List<PersonDTO> people) throws Exception {
+    public Resource exportPeople(List<PersonDTO> people) throws Exception {
         InputStream inputStream = getClass().getResourceAsStream("/templates/person.jrxml");
         if (inputStream == null) {
             throw new RuntimeException("Template file not found: /templates/person.jrxml");
@@ -60,9 +60,6 @@ public class PdfExporter implements FileExporter {
         parameters.put("SUB_REPORT_DATA_SOURCE", subReportDataSource);
         parameters.put("BOOK_SUB_REPORT", subReport);
         parameters.put("QR_CODEIMAGE", qrCodeStream);
-
-        // Remova a linha que referencia o arquivo .jasper pois não é mais necessário
-        // String path = getClass().getResource("/templates/books.jasper").getPath();
 
         JRBeanCollectionDataSource mainDataSource = new JRBeanCollectionDataSource(Collections.singletonList(person));
 
