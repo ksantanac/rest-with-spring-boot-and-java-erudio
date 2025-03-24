@@ -7,10 +7,6 @@ import br.com.erudio.exception.BadRequestException;
 import br.com.erudio.exception.FileStorageException;
 import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.exception.ResourceNotFoundException;
-import static br.com.erudio.mapper.ObjectMapper.parseListObjects;
-import static br.com.erudio.mapper.ObjectMapper.parseObject;
-
-import br.com.erudio.file.exporter.MediaTypes;
 import br.com.erudio.file.exporter.contract.FileExporter;
 import br.com.erudio.file.exporter.factory.FileExporterFactory;
 import br.com.erudio.file.importer.contract.FileImporter;
@@ -18,14 +14,9 @@ import br.com.erudio.file.importer.factory.FileImporterFactory;
 import br.com.erudio.mapper.custom.PersonMapper;
 import br.com.erudio.model.Person;
 import br.com.erudio.repository.PersonRepository;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -36,12 +27,14 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+
+import static br.com.erudio.mapper.ObjectMapper.parseObject;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class PersonServices {
@@ -94,6 +87,22 @@ public class PersonServices {
             return exporter.exportFile(people);
         } catch (Exception e) {
             throw new RuntimeException("Error during file export.", e);
+        }
+    }
+
+    // EXPORT PERSON
+    public Resource exportPerson(Long id, String acceptHeader) {
+        logger.info("Exporting data of one Person!");
+
+        var person = repository.findById(id)
+                .map(entity -> parseObject(entity, PersonDTO.class))
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
+        try {
+            FileExporter exporter = this.exporter.getExporter(acceptHeader);
+            return exporter.exportPerson(person);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during file export!", e);
         }
     }
 

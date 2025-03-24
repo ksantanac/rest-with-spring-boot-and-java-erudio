@@ -47,6 +47,25 @@ public class PersonController implements PersonControllerDocs {
         return service.findById(id);
     }
 
+    // EXPORT
+    @GetMapping(value = "/export/{id}",
+            produces = {
+                    MediaType.APPLICATION_PDF_VALUE}
+    )
+    @Override
+    public ResponseEntity<Resource> export(@PathVariable("id") Long id, HttpServletRequest request) {
+
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+        Resource file = service.exportPerson(id, acceptHeader);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(acceptHeader))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=person.pdf")
+                .body(file);
+    }
+
     // FindAll
     @GetMapping(
         produces = {

@@ -65,4 +65,9 @@ public class XlsxExporter implements FileExporter {
 
         return style;
     }
+
+    @Override
+    public Resource exportPerson(PersonDTO person) throws Exception {
+        return null;
+    }
 }
