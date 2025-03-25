@@ -23,6 +23,7 @@
 		<commons-io.version>2.18.0</commons-io.version>
 		<jasperreports.version>7.0.1</jasperreports.version>
 		<zxing.version>3.5.3</zxing.version>
+		<java-jwt.version>4.4.0</java-jwt.version>
 	</properties>
 	<dependencies>
 
@@ -41,6 +42,17 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>${java-jwt.version}</version>
 		</dependency>
 
 		<dependency>
