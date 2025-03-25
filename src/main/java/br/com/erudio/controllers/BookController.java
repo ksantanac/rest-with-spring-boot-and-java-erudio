@@ -3,8 +3,7 @@ package br.com.erudio.controllers;
 
 import br.com.erudio.controllers.docs.BookControllerDocs;
 import br.com.erudio.data.dto.v1.BookDTO;
-import br.com.erudio.data.dto.v1.PersonDTO;
-import br.com.erudio.services.BookServices;
+import br.com.erudio.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,14 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequestMapping("api/book/v1")
 @RestController
 public class BookController implements BookControllerDocs {
 
     @Autowired
-    private BookServices service;
+    private BookService service;
 
     // FIND BY ID
     @GetMapping(

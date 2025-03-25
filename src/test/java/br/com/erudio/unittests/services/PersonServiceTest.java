@@ -4,7 +4,7 @@ import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.model.Person;
 import br.com.erudio.repository.PersonRepository;
-import br.com.erudio.services.PersonServices;
+import br.com.erudio.services.PersonService;
 import br.com.erudio.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -25,12 +25,12 @@ import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-class PersonServicesTest {
+class PersonServiceTest {
 
     MockPerson input;
 
     @InjectMocks
-    private PersonServices service;
+    private PersonService service;
 
     @Mock
     PersonRepository repository;

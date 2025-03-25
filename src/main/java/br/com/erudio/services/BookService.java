@@ -24,9 +24,9 @@ import org.springframework.stereotype.Service;
 import java.util.logging.Logger;
 
 @Service
-public class BookServices {
+public class BookService {
 
-    private Logger logger = Logger.getLogger(BookServices.class.getName());
+    private Logger logger = Logger.getLogger(BookService.class.getName());
 
     @Autowired
     BookRepository repository;
