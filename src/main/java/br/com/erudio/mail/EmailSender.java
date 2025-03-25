@@ -1,7 +1,6 @@
 package br.com.erudio.mail;
 
 import br.com.erudio.config.EmailConfig;
-import br.com.erudio.file.importer.factory.FileImporterFactory;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
@@ -20,7 +19,7 @@ import java.util.StringTokenizer;
 @Component
 public class EmailSender implements Serializable {
 
-    Logger logger = LoggerFactory.getLogger(FileImporterFactory.class);
+    Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
     private final JavaMailSender mailSender;
     private String to;
@@ -29,7 +28,6 @@ public class EmailSender implements Serializable {
     private ArrayList<InternetAddress> recipients = new ArrayList<>();
     private File attachment;
 
-
     public EmailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -37,51 +35,42 @@ public class EmailSender implements Serializable {
     public EmailSender to(String to) {
         this.to = to;
         this.recipients = getRecipients(to);
-
         return this;
     }
 
     public EmailSender withSubject(String subject) {
         this.subject = subject;
-
         return this;
     }
 
     public EmailSender withMessage(String body) {
         this.body = body;
-
         return this;
     }
 
     public EmailSender attach(String fileDir) {
         this.attachment = new File(fileDir);
-
         return this;
     }
 
     public void send(EmailConfig config){
-
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = null;
         try {
-            helper = new MimeMessageHelper(message, true);
-
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(config.getUsername());
             helper.setTo(recipients.toArray(new InternetAddress[0]));
             helper.setSubject(subject);
             helper.setText(body, true);
-
             if (attachment != null) {
                 helper.addAttachment(attachment.getName(), attachment);
             }
-
             mailSender.send(message);
-            logger.info("E-mail sent to %s with the subject '%s'%n", to, subject);
+            logger.info("Email sent to %s with the subject '%s'%n", to, subject);
             reset();
-
         } catch (MessagingException e) {
-            throw new RuntimeException("Error sending the e-mail.", e);
+            throw new RuntimeException("Error sending the email", e);
         }
+
     }
 
     private void reset() {
@@ -92,10 +81,14 @@ public class EmailSender implements Serializable {
         this.attachment = null;
     }
 
+    // email1@gmail.com;email2@gmail.com,email3@gmail.com
     private ArrayList<InternetAddress> getRecipients(String to) {
-        String toWithouSpaces = to.replaceAll("\\s", "");
-        StringTokenizer tok = new StringTokenizer(toWithouSpaces, ";");
+        if (to == null || to.trim().isEmpty()) {
+            throw new IllegalArgumentException("O destinatário (to) não pode ser nulo ou vazio!");
+        }
 
+        String toWithoutSpaces = to.replaceAll("\\s", "");
+        StringTokenizer tok = new StringTokenizer(toWithoutSpaces, ";");
         ArrayList<InternetAddress> recipientsList = new ArrayList<>();
         while (tok.hasMoreElements()) {
             try {
@@ -104,7 +97,7 @@ public class EmailSender implements Serializable {
                 throw new RuntimeException(e);
             }
         }
-
         return recipientsList;
     }
+
 }

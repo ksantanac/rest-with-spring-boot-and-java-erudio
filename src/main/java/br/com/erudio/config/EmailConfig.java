@@ -1,5 +1,6 @@
 package br.com.erudio.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,8 +17,7 @@ public class EmailConfig {
     private String from;
     private boolean ssl;
 
-    public EmailConfig() {
-    }
+    public EmailConfig() {}
 
     public String getHost() {
         return host;
@@ -71,11 +71,11 @@ public class EmailConfig {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         EmailConfig that = (EmailConfig) o;
-        return port == that.port && ssl == that.ssl && Objects.equals(host, that.host) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(from, that.from);
+        return getPort() == that.getPort() && isSsl() == that.isSsl() && Objects.equals(getHost(), that.getHost()) && Objects.equals(getUsername(), that.getUsername()) && Objects.equals(getPassword(), that.getPassword()) && Objects.equals(getFrom(), that.getFrom());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(host, port, username, password, from, ssl);
+        return Objects.hash(getHost(), getPort(), getUsername(), getPassword(), getFrom(), isSsl());
     }
 }
