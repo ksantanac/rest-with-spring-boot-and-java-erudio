@@ -3,6 +3,11 @@ cors:
 file:
   upload-dir: /home/local/BVS/kaue.alexandre/Documentos/Cursos
   #  upload-dir: /Users/kaues/Documents/Cursos/UploadDir
+security:
+  jwt:
+    token:
+      secret-key: 53cr37
+      expire-lenght: 3600000
 email:
   subjetc: "Default Subject"
   message: "Default Message"
