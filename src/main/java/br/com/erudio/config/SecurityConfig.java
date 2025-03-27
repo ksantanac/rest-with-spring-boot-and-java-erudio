@@ -27,10 +27,10 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         // 1. Cria o encoder específico PBKDF2
         PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(
-                "",                  // Salt secreto (vazio para salt aleatório)
-                8,                   // Tamanho do salt em bytes
-                185000,              // Número de iterações
-                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
+            "",                  // Salt secreto (vazio para salt aleatório)
+            8,                   // Tamanho do salt em bytes
+            185000,              // Número de iterações
+            Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
         );
 
         // 2. Cria um mapa de encoders (útil para migração ou múltiplos algoritmos)
