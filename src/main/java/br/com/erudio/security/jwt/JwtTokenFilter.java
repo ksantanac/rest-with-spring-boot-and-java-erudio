@@ -26,22 +26,22 @@ public class JwtTokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter)
             throws IOException, ServletException {
 
-        // 1. Extrai o token JWT do cabeçalho da requisição
+        // Extrai o token do cabeçalho da requisição HTTP
         var token = tokenProvider.resolveToken((HttpServletRequest) request);
 
-        // 2. Se existir token e for válido
+        // Verifica se o token não está em branco e se é válido
         if (StringUtils.isNotBlank(token) && tokenProvider.validateToken(token)) {
 
-            // 3. Obtém a autenticação do usuário a partir do token
+            // Obtém a autenticação do token
             Authentication authentication = tokenProvider.getAuthentication(token);
 
-            // 4. Se a autenticação for válida, define no contexto de segurança
+            // Se a autenticação for válida, define-a no contexto de segurança do Spring
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
 
-        // 5. Continua a cadeia de filtros
+        // Continua a cadeia de filtros
         filter.doFilter(request, response);
     }
 

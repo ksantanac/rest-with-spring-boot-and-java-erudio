@@ -128,35 +128,38 @@ public class JwtTokenProvider {
         return decodedJWT;
     }
 
-    // Extrai o token JWT do cabeçalho Authorization da requisição HTTP
+    // Método responsável por extrair o token JWT do cabeçalho da requisição HTTP
     public String resolveToken(HttpServletRequest request) {
-        // Obtém o cabeçalho Authorization (observação: há um typo no nome do cabeçalho)
-        String bearerToken = request.getHeader("Authorizations"); // Deveria ser "Authorization"
+        // Obtém o valor do cabeçalho "Authorization"
+        String bearerToken = request.getHeader("Authorization");
 
-        // Verifica se o token existe e começa com "Bearer " (observação: há um typo em "Beaer")
-        if (StringUtils.isEmpty(bearerToken) && bearerToken.startsWith("Beaer ")) {
-            // Remove o prefixo "Bearer " e retorna apenas o token
-            return bearerToken.substring("Beaer ".length());
-        } else {
-            throw new InvalidJwtAuthenticationException("Invalid JWT Token.");
-        }
+        // Verifica se o token possui o prefixo "Bearer " e retorna apenas o token, removendo o prefixo
+        if (refreshTokenContainsBearer(bearerToken))
+            return bearerToken.substring("Bearer ".length());
+
+        // Retorna null caso o token não esteja presente ou não tenha o formato esperado
+        return null;
     }
 
-    // Valida se um token JWT é válido e não está expirado
-    public boolean validateToken(String token) {
-        try {
-            // Decodifica o token
-            DecodedJWT decodedJWT = decodedToken(token);
+    // Método auxiliar que verifica se a string contém um token válido com prefixo "Bearer "
+    private static boolean refreshTokenContainsBearer(String refreshToken) {
+        return StringUtils.isNotBlank(refreshToken) && refreshToken.startsWith("Bearer ");
+    }
 
+    // Método responsável por validar o token JWT
+    public boolean validateToken(String token) {
+        // Decodifica o token JWT
+        DecodedJWT decodedJWT = decodedToken(token);
+
+        try {
             // Verifica se o token está expirado
             if (decodedJWT.getExpiresAt().before(new Date())) {
-                return false;
+                return false; // Retorna falso se o token estiver expirado
             }
-
-            return true;
+            return true; // Retorna verdadeiro se o token for válido
         } catch (Exception e) {
-            // Captura qualquer erro na validação (token inválido, expirado, etc.)
-            throw new InvalidJwtAuthenticationException("Expired or Invalid Token.");
+            // Lança uma exceção personalizada caso o token seja inválido ou expirado
+            throw new InvalidJwtAuthenticationException("Expired or Invalid JWT Token!");
         }
     }
 

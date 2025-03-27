@@ -34,7 +34,7 @@ public class Startup {
 
 		passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
 
-		var pass1 = passwordEncoder.encode("admin123");
+		var pass1 = passwordEncoder.encode("rekaue13");
 		var pass2 = passwordEncoder.encode("admin234");
 
 		System.out.println(pass1);
