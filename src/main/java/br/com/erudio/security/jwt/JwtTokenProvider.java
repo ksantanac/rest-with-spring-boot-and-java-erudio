@@ -47,13 +47,7 @@ public class JwtTokenProvider {
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    /**
-     * Cria um TokenDTO contendo access token e refresh token para um usuário
-     *
-     * @param username Nome do usuário autenticado
-     * @param roles Lista de permissões/roles do usuário
-     * @return TokenDTO contendo ambos tokens e informações relevantes
-     */
+    // Cria um TokenDTO contendo access token e refresh token para um usuário
     public TokenDTO createAcessToken(String username, List<String> roles) {
         // Data/hora atual
         Date now = new Date();
@@ -71,17 +65,11 @@ public class JwtTokenProvider {
         return new TokenDTO(username, true, now, validity, acessToken, refreshToken);
     }
 
-    /**
-     * Gera um refresh token JWT
-     *
-     * @param username Nome do usuário
-     * @param roles Lista de permissões
-     * @param now Data/hora atual
-     * @return String contendo o refresh token assinado
-     */
+
+    // Gera um refresh token JWT
     private String getRefreshToken(String username, List<String> roles, Date now) {
         // Define validade do refresh token (normalmente mais longo que o access token)
-        Date refreshTokenValidty = new Date(now.getTime() + validityInMilliseconds);
+        Date refreshTokenValidty = new Date(now.getTime() + (validityInMilliseconds * 3));
 
         // Constrói e retorna o token JWT
         return JWT.create()
@@ -89,19 +77,10 @@ public class JwtTokenProvider {
                 .withIssuedAt(now)                  // Data de emissão
                 .withExpiresAt(refreshTokenValidty) // Data de expiração
                 .withSubject(username)              // Identificador do usuário
-                .sign(algorithm)                    // Assina com o algoritmo HMAC256
-                .toString();                        // Converte para String
+                .sign(algorithm);
     }
 
-    /**
-     * Gera um access token JWT
-     *
-     * @param username Nome do usuário
-     * @param roles Lista de permissões
-     * @param now Data/hora atual
-     * @param validity Data de expiração
-     * @return String contendo o access token assinado
-     */
+    // Gera um access token JWT
     private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
         // Obtém a URL base da aplicação para usar como issuer
         String issuerUrl = ServletUriComponentsBuilder
@@ -116,46 +95,68 @@ public class JwtTokenProvider {
                 .withExpiresAt(validity)      // Data de expiração
                 .withSubject(username)        // Identificador do usuário
                 .withIssuer(issuerUrl)        // Quem emitiu o token (sua aplicação)
-                .sign(algorithm)              // Assina com o algoritmo HMAC256
-                .toString();                  // Converte para String
+                .sign(algorithm);
     }
 
+    // Obtém a autenticação do usuário a partir do token JWT
     public Authentication getAuthentication(String token) {
+        // Decodifica o token JWT
         DecodedJWT decodedJWT = decodedToken(token);
+
+        // Carrega os detalhes do usuário do banco de dados usando o subject (username) do token
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(decodedJWT.getSubject());
 
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        // Cria e retorna um objeto de autenticação do Spring Security
+        return new UsernamePasswordAuthenticationToken(
+                userDetails,           // Principal (usuário autenticado)
+                "",                     // Credenciais (não necessárias após autenticação)
+                userDetails.getAuthorities()  // Lista de autoridades/roles do usuário
+        );
     }
 
+    // Decodifica e valida um token JWT usando a chave secreta
     private DecodedJWT decodedToken(String token) {
+        // Cria o algoritmo de verificação com a chave secreta
         Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
+
+        // Cria o verificador JWT
         JWTVerifier verifier = JWT.require(alg).build();
+
+        // Verifica e decodifica o token
         DecodedJWT decodedJWT = verifier.verify(token);
 
         return decodedJWT;
     }
 
+    // Extrai o token JWT do cabeçalho Authorization da requisição HTTP
     public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorizations");
+        // Obtém o cabeçalho Authorization (observação: há um typo no nome do cabeçalho)
+        String bearerToken = request.getHeader("Authorizations"); // Deveria ser "Authorization"
 
-        // Bearer
+        // Verifica se o token existe e começa com "Bearer " (observação: há um typo em "Beaer")
         if (StringUtils.isEmpty(bearerToken) && bearerToken.startsWith("Beaer ")) {
+            // Remove o prefixo "Bearer " e retorna apenas o token
             return bearerToken.substring("Beaer ".length());
         } else {
             throw new InvalidJwtAuthenticationException("Invalid JWT Token.");
         }
     }
 
+    // Valida se um token JWT é válido e não está expirado
     public boolean validateToken(String token) {
-        DecodedJWT decodedJWT = decodedToken(token);
         try {
+            // Decodifica o token
+            DecodedJWT decodedJWT = decodedToken(token);
+
+            // Verifica se o token está expirado
             if (decodedJWT.getExpiresAt().before(new Date())) {
                 return false;
             }
 
             return true;
         } catch (Exception e) {
-            throw new InvalidJwtAuthenticationException("Expire or Invalid Token.");
+            // Captura qualquer erro na validação (token inválido, expirado, etc.)
+            throw new InvalidJwtAuthenticationException("Expired or Invalid Token.");
         }
     }
 
