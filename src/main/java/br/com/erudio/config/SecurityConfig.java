@@ -24,19 +24,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder () {
-
+    PasswordEncoder passwordEncoder() {
+        // 1. Cria o encoder específico PBKDF2
         PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(
-            "",
-            8,
-            185000,
-            Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
+                "",                  // Salt secreto (vazio para salt aleatório)
+                8,                   // Tamanho do salt em bytes
+                185000,              // Número de iterações
+                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
         );
 
+        // 2. Cria um mapa de encoders (útil para migração ou múltiplos algoritmos)
         Map<String, PasswordEncoder> encoders = new HashMap<>();
         encoders.put("pbkdf2", pbkdf2Encoder);
-        DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
 
+        // 3. Cria um encoder delegado que pode suportar múltiplos algoritmos
+        DelegatingPasswordEncoder passwordEncoder =
+                new DelegatingPasswordEncoder("pbkdf2", encoders);
+
+        // 4. Configura o encoder padrão para verificação
         passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
 
         return passwordEncoder;
