@@ -1,13 +1,21 @@
 package br.com.erudio.config;
 
+import br.com.erudio.security.jwt.JwtTokenFilter;
 import br.com.erudio.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,4 +55,68 @@ public class SecurityConfig {
         return passwordEncoder;
     }
 
+    @Bean
+    // Expõe o AuthenticationManager como um bean Spring
+    // Necessário para processar autenticações programáticas
+    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    // Configura a cadeia de filtros de segurança principal
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Cria nosso filtro JWT personalizado
+        JwtTokenFilter filter = new JwtTokenFilter(tokenProvider);
+
+        // Configuração da segurança HTTP (desabilitamos formatação automática para melhor legibilidade)
+        // @formatter:off
+        return http
+            // Desabilita autenticação básica (HTTP Basic Auth)
+            .httpBasic(AbstractHttpConfigurer::disable)
+
+            // Desabilita proteção CSRF (não necessário para APIs stateless)
+            .csrf(AbstractHttpConfigurer::disable)
+
+            // Adiciona nosso filtro JWT antes do filtro de autenticação padrão
+            .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+
+            // Configura política de sessão como STATELESS (sem sessões HTTP)
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+
+            // Configura as regras de autorização
+            .authorizeHttpRequests(authorize -> authorize
+                    // Rotas públicas - acesso permitido sem autenticação
+                    .requestMatchers(
+                "/auth/signin",          // Endpoint de login
+                        "/auth/refresh/**",      // Endpoint para refresh token
+                        "/auth/createUser",      // Endpoint de criação de usuário
+                        "/swagger-ui/**",        // Documentação Swagger UI
+                        "/v3/api-docs/**"        // Especificação OpenAPI
+                    ).permitAll()
+
+                    // Rotas da API - requerem autenticação
+                    .requestMatchers("/api/**").authenticated()
+
+                    // Rotas explícitamente bloqueadas
+                    .requestMatchers("/users").denyAll()
+            )
+
+            // Habilita CORS (com configuração padrão)
+            .cors(cors -> {})
+
+            // Constrói a configuração
+            .build();
+    // @formatter:on
+    }
+
 }
+
+
+
+
+
+
+
+
