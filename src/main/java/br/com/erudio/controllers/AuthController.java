@@ -1,12 +1,14 @@
 package br.com.erudio.controllers;
 
 import br.com.erudio.data.dto.security.AccountCredentialsDTO;
+import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ public class AuthController {
     @Autowired
     AuthService service;
 
+    // SINGNIN
     @Operation(summary = "Autenticates an user and returns a token.")
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody AccountCredentialsDTO credentials) {
@@ -41,6 +44,7 @@ public class AuthController {
         return ResponseEntity.ok().body(token);
     }
 
+    // REFRESH
     // Define o endpoint PUT para atualizar o token de um usuário autenticado
     @Operation(summary = "Refresh token for authenticated user and returns a token.")
     @PutMapping("/refresh/{username}")
@@ -66,6 +70,24 @@ public class AuthController {
 
         // Retorna o novo token com status 200 OK
         return ResponseEntity.ok().body(token);
+    }
+
+    // CREATE
+    @PostMapping(
+        value = "/createUser",
+        consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE
+        },
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE
+        }
+    )
+    public AccountCredentialsDTO create(@RequestBody AccountCredentialsDTO credentials) {
+        return service.create(credentials);
     }
 
     private boolean parametersAreInvalid(String username, String refreshToken) {
