@@ -1,5 +1,6 @@
 package br.com.erudio.controllers;
 
+import br.com.erudio.controllers.docs.AuthControllerDocs;
 import br.com.erudio.data.dto.security.AccountCredentialsDTO;
 import br.com.erudio.data.dto.v1.PersonDTO;
 import br.com.erudio.services.AuthService;
@@ -15,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication Endpoint")
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
     @Autowired
     AuthService service;
 
     // SINGNIN
-    @Operation(summary = "Autenticates an user and returns a token.")
     @PostMapping("/signin")
+    @Override
     public ResponseEntity<?> signin(@RequestBody AccountCredentialsDTO credentials) {
 
         // 1. Validação das credenciais de entrada
@@ -46,8 +47,8 @@ public class AuthController {
 
     // REFRESH
     // Define o endpoint PUT para atualizar o token de um usuário autenticado
-    @Operation(summary = "Refresh token for authenticated user and returns a token.")
     @PutMapping("/refresh/{username}")
+    @Override
     public ResponseEntity<?> refreshToken(
             @PathVariable("username") String username, // Recebe o nome de usuário da URL
             @RequestHeader("Authorization") String refreshToken // Recebe o refresh token do cabeçalho da requisição
@@ -86,6 +87,7 @@ public class AuthController {
             MediaType.APPLICATION_YAML_VALUE
         }
     )
+    @Override
     public AccountCredentialsDTO create(@RequestBody AccountCredentialsDTO credentials) {
         return service.create(credentials);
     }
