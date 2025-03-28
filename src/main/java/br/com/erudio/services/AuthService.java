@@ -40,9 +40,7 @@ public class AuthService {
 
         // Verifica se usuário foi encontrado (isso normalmente não deveria acontecer se a autenticação passou)
         if (user == null) {
-            throw new UsernameNotFoundException(
-                    "Username " + credentials.getUsername() + " not found!"
-            );
+            throw new UsernameNotFoundException("Username " + credentials.getUsername() + " not found!");
         }
 
         // 3. Gera os tokens JWT para o usuário autenticado
@@ -55,5 +53,28 @@ public class AuthService {
         return ResponseEntity.ok(token);
 
     }
+
+    // Método que recebe o nome de usuário e o refresh token, e retorna um novo token de acesso (TokenDTO)
+    public ResponseEntity<TokenDTO> refreshToken(String username, String refreshToken) {
+
+        // Busca o usuário no repositório usando o nome de usuário
+        var user = repository.findByUsername(username);
+
+        // Variável para armazenar o novo token
+        TokenDTO token;
+
+        // Verifica se o usuário foi encontrado no banco de dados
+        if (user == null) {
+            // Se o usuário não for encontrado, chama o método refreshToken no TokenProvider para gerar um novo token
+            token = tokenProvider.refreshToken(refreshToken);
+        } else {
+            // Se o usuário for encontrado, lança uma exceção indicando que o nome de usuário não foi encontrado
+            throw new UsernameNotFoundException("Username " + username + " not found!");
+        }
+
+        // Retorna o novo token com status HTTP 200 OK
+        return ResponseEntity.ok(token);
+    }
+
 
 }

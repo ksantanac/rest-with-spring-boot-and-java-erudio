@@ -65,6 +65,29 @@ public class JwtTokenProvider {
         return new TokenDTO(username, true, now, validity, acessToken, refreshToken);
     }
 
+    // Método que recebe o refreshToken e retorna um novo token de acesso (access token)
+    public TokenDTO refreshToken(String refreshToken) {
+
+        // Verifica se o refreshToken começa com "Bearer " e, se sim, remove essa parte
+        if (refreshTokenContainsBearer(refreshToken))
+            // Removendo o prefixo "Bearer " do refreshToken, caso ele esteja presente.
+            refreshToken.substring("Bearer ".length());
+
+        // Criando um verificador JWT com o algoritmo previamente configurado
+        JWTVerifier verifier = JWT.require(algorithm).build();
+
+        // Verificando e decodificando o refreshToken usando o verificador
+        DecodedJWT decodedJWT = verifier.verify(refreshToken);
+
+        // Extraindo o nome de usuário (subject) do token decodificado
+        String username = decodedJWT.getSubject();
+
+        // Extraindo as roles (permissões) do token decodificado
+        List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+
+        // Criando um novo access token com o nome de usuário e as permissões recuperadas
+        return createAcessToken(username, roles);
+    }
 
     // Gera um refresh token JWT
     private String getRefreshToken(String username, List<String> roles, Date now) {
@@ -134,8 +157,7 @@ public class JwtTokenProvider {
         String bearerToken = request.getHeader("Authorization");
 
         // Verifica se o token possui o prefixo "Bearer " e retorna apenas o token, removendo o prefixo
-        if (refreshTokenContainsBearer(bearerToken))
-            return bearerToken.substring("Bearer ".length());
+        if (refreshTokenContainsBearer(bearerToken)) return bearerToken.substring("Bearer ".length());
 
         // Retorna null caso o token não esteja presente ou não tenha o formato esperado
         return null;

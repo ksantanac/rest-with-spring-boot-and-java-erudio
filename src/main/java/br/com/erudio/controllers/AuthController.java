@@ -8,10 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Authentication Endpoint")
 @RestController
@@ -42,6 +39,37 @@ public class AuthController {
 
         // 4. Retorno do token em caso de sucesso
         return ResponseEntity.ok().body(token);
+    }
+
+    // Define o endpoint PUT para atualizar o token de um usuário autenticado
+    @Operation(summary = "Refresh token for authenticated user and returns a token.")
+    @PutMapping("/refresh/{username}")
+    public ResponseEntity<?> refreshToken(
+            @PathVariable("username") String username, // Recebe o nome de usuário da URL
+            @RequestHeader("Authorization") String refreshToken // Recebe o refresh token do cabeçalho da requisição
+    ) {
+
+        // Valida se os parâmetros fornecidos são inválidos
+        if (parametersAreInvalid(username, refreshToken)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Invalid client request!"); // Retorna status 403 (Forbidden) se os parâmetros forem inválidos
+        }
+
+        // Chama o serviço para obter um novo token com base no refresh token
+        var token = service.refreshToken(username, refreshToken);
+
+        // Se não houver um token válido, retorna erro
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Invalid client request!"); // Retorna status 403 se não houver um token válido
+        }
+
+        // Retorna o novo token com status 200 OK
+        return ResponseEntity.ok().body(token);
+    }
+
+    private boolean parametersAreInvalid(String username, String refreshToken) {
+        return StringUtils.isBlank(username) || StringUtils.isBlank(refreshToken);
     }
 
     // Método auxiliar para validar credenciais
