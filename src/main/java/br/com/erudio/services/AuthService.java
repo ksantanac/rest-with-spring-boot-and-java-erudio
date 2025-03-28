@@ -28,12 +28,11 @@ public class AuthService {
 
         // 1. Autentica as credenciais do usuário
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        credentials.getUsername(), // Nome de usuário fornecido
-                        credentials.getPassword()  // Senha fornecida
-                )
+            new UsernamePasswordAuthenticationToken(
+                credentials.getUsername(), // Nome de usuário fornecido
+                credentials.getPassword()  // Senha fornecida
+            )
         );
-        // Se falhar, lança AuthenticationException (BadCredentialsException)
 
         // 2. Busca o usuário no banco de dados
         var user = repository.findByUsername(credentials.getUsername());
@@ -57,22 +56,16 @@ public class AuthService {
     // Método que recebe o nome de usuário e o refresh token, e retorna um novo token de acesso (TokenDTO)
     public ResponseEntity<TokenDTO> refreshToken(String username, String refreshToken) {
 
-        // Busca o usuário no repositório usando o nome de usuário
         var user = repository.findByUsername(username);
-
-        // Variável para armazenar o novo token
         TokenDTO token;
 
-        // Verifica se o usuário foi encontrado no banco de dados
-        if (user == null) {
+        if (user != null) {
             // Se o usuário não for encontrado, chama o método refreshToken no TokenProvider para gerar um novo token
             token = tokenProvider.refreshToken(refreshToken);
         } else {
-            // Se o usuário for encontrado, lança uma exceção indicando que o nome de usuário não foi encontrado
             throw new UsernameNotFoundException("Username " + username + " not found!");
         }
 
-        // Retorna o novo token com status HTTP 200 OK
         return ResponseEntity.ok(token);
     }
 

@@ -68,16 +68,18 @@ public class JwtTokenProvider {
     // Método que recebe o refreshToken e retorna um novo token de acesso (access token)
     public TokenDTO refreshToken(String refreshToken) {
 
+        var token = "";
+
         // Verifica se o refreshToken começa com "Bearer " e, se sim, remove essa parte
         if (refreshTokenContainsBearer(refreshToken))
             // Removendo o prefixo "Bearer " do refreshToken, caso ele esteja presente.
-            refreshToken.substring("Bearer ".length());
+            token = refreshToken.substring("Bearer ".length());
 
         // Criando um verificador JWT com o algoritmo previamente configurado
         JWTVerifier verifier = JWT.require(algorithm).build();
 
         // Verificando e decodificando o refreshToken usando o verificador
-        DecodedJWT decodedJWT = verifier.verify(refreshToken);
+        DecodedJWT decodedJWT = verifier.verify(token);
 
         // Extraindo o nome de usuário (subject) do token decodificado
         String username = decodedJWT.getSubject();
