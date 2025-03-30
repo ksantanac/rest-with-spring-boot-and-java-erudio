@@ -42,7 +42,7 @@ public class AuthController implements AuthControllerDocs {
         }
 
         // 4. Retorno do token em caso de sucesso
-        return ResponseEntity.ok().body(token);
+        return token;
     }
 
     // REFRESH
@@ -70,7 +70,7 @@ public class AuthController implements AuthControllerDocs {
         }
 
         // Retorna o novo token com status 200 OK
-        return ResponseEntity.ok().body(token);
+        return token;
     }
 
     // CREATE

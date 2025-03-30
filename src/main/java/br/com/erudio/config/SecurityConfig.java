@@ -89,7 +89,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                     // Rotas públicas - acesso permitido sem autenticação
                     .requestMatchers(
-                "/auth/signin",          // Endpoint de login
+                "/auth/signin" +
+                        "",          // Endpoint de login
                         "/auth/refresh/**",      // Endpoint para refresh token
                         "/auth/createUser",      // Endpoint de criação de usuário
                         "/swagger-ui/**",        // Documentação Swagger UI

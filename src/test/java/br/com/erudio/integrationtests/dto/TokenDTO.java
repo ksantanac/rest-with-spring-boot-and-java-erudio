@@ -1,10 +1,15 @@
-package br.com.erudio.data.dto.security;
+package br.com.erudio.integrationtests.dto;
+
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+@XmlRootElement
 public class TokenDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String username;
     private Boolean authenticated;
@@ -15,7 +20,9 @@ public class TokenDTO implements Serializable {
 
     public TokenDTO() {}
 
-    public TokenDTO(String username, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
+    public TokenDTO(String username, Boolean authenticated,
+                    Date created, Date expiration, String accessToken,
+                    String refreshToken) {
         this.username = username;
         this.authenticated = authenticated;
         this.created = created;
@@ -76,11 +83,11 @@ public class TokenDTO implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TokenDTO tokenDTO = (TokenDTO) o;
-        return Objects.equals(username, tokenDTO.username) && Objects.equals(authenticated, tokenDTO.authenticated) && Objects.equals(created, tokenDTO.created) && Objects.equals(expiration, tokenDTO.expiration) && Objects.equals(accessToken, tokenDTO.accessToken) && Objects.equals(refreshToken, tokenDTO.refreshToken);
+        return Objects.equals(getUsername(), tokenDTO.getUsername()) && Objects.equals(getAuthenticated(), tokenDTO.getAuthenticated()) && Objects.equals(getCreated(), tokenDTO.getCreated()) && Objects.equals(getExpiration(), tokenDTO.getExpiration()) && Objects.equals(getAccessToken(), tokenDTO.getAccessToken()) && Objects.equals(getRefreshToken(), tokenDTO.getRefreshToken());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, authenticated, created, expiration, accessToken, refreshToken);
+        return Objects.hash(getUsername(), getAuthenticated(), getCreated(), getExpiration(), getAccessToken(), getRefreshToken());
     }
 }
