@@ -59,6 +59,15 @@ jobs:
         docker push ${{ secrets.REGISTRY_INFO }}/rest_with_spring_boot_erudio:${{ github.run_id }}                                            
         
 
+    - name: Deploy to Google Cloud Run
+      run: |
+        google run deploy rest-with-spring-boot-erudio \
+         --image docker push ${{ secrets.REGISTRY_INFO }}/rest_with_spring_boot_erudio:latest \
+         --region southamerica-east1 \
+         --platform managed \
+         --allow-unauthenticated
+
+
     - name: Push to Docker Hub Container Registry
       run: |
         docker tag ${{ secrets.DOCKER_USERNAME }}/rest_with_spring_boot_erudio:latest ${{ secrets.DOCKER_USERNAME }}/rest_with_spring_boot_erudio:${{ github.run_id }}
