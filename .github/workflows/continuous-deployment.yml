@@ -62,7 +62,7 @@ jobs:
     - name: Deploy to Google Cloud Run
       run: |
         gcloud run deploy rest-with-spring-boot-erudio \
-         --image docker push ${{ secrets.REGISTRY_INFO }}/rest_with_spring_boot_erudio:latest \
+         --image ${{ secrets.REGISTRY_INFO }}/rest_with_spring_boot_erudio:latest \
          --region southamerica-east1 \
          --platform managed \
          --allow-unauthenticated
