@@ -1,7 +1,8 @@
 package br.com.erudio.config;
 
 public interface TestConfigs {
-    int SERVER_PORT = 8080;
+    int SERVER_PORT = 8888;
+//    int SERVER_PORT = 8080;
 
     String HEADER_PARAM_AUTHORIZATION = "Authorization";
     String HEADER_PARAM_ORIGIN = "Origin";
