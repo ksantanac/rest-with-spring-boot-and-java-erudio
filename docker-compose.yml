@@ -24,9 +24,10 @@ services:
       SPRING.DATASOURCE.URL: jdbc:mysql://db:3306/rest_with_spring_boot_erudio?useTimezone=true&serverTimezone=UTC
       SPRING.DATASOURCE.USERNAME: root
       SPRING.DATASOURCE.PASSWORD: rekaue13
+      SERVER_PORT: 8080
     command: mvn spring-boot:run
     ports:
-      - 80:80
+      - "8080:8080"
     depends_on:
       - db
     networks:
